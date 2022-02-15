@@ -10,6 +10,9 @@
 		4A63189D27BBC78F008AD8EA /* SPPDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A63189227BBC78F008AD8EA /* SPPDFKit.framework */; };
 		4A6318A227BBC78F008AD8EA /* SPPDFKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6318A127BBC78F008AD8EA /* SPPDFKitTests.swift */; };
 		4A6318A327BBC78F008AD8EA /* SPPDFKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4A63189527BBC78F008AD8EA /* SPPDFKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4AD1537627BBFBEC008D6EC7 /* SPAccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD1537527BBFBEC008D6EC7 /* SPAccessibilityIdentifier.swift */; };
+		4AD1537827BBFD34008D6EC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4AD1537727BBFD34008D6EC7 /* Assets.xcassets */; };
+		4AD1537A27BC009A008D6EC7 /* SPImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD1537927BC009A008D6EC7 /* SPImages.swift */; };
 		4AE0513527BBC86900622959 /* SPPDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE0513427BBC86800622959 /* SPPDFViewController.swift */; };
 		4AE0514027BBD8B500622959 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE0513F27BBD8B500622959 /* UIView+Extension.swift */; };
 /* End PBXBuildFile section */
@@ -29,6 +32,9 @@
 		4A63189527BBC78F008AD8EA /* SPPDFKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPPDFKit.h; sourceTree = "<group>"; };
 		4A63189C27BBC78F008AD8EA /* SPPDFKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SPPDFKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A6318A127BBC78F008AD8EA /* SPPDFKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPPDFKitTests.swift; sourceTree = "<group>"; };
+		4AD1537527BBFBEC008D6EC7 /* SPAccessibilityIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAccessibilityIdentifier.swift; sourceTree = "<group>"; };
+		4AD1537727BBFD34008D6EC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4AD1537927BC009A008D6EC7 /* SPImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPImages.swift; sourceTree = "<group>"; };
 		4AE0513427BBC86800622959 /* SPPDFViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPPDFViewController.swift; sourceTree = "<group>"; };
 		4AE0513F27BBD8B500622959 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -76,6 +82,9 @@
 				4AE0513E27BBD88D00622959 /* Extension */,
 				4A63189527BBC78F008AD8EA /* SPPDFKit.h */,
 				4AE0513427BBC86800622959 /* SPPDFViewController.swift */,
+				4AD1537527BBFBEC008D6EC7 /* SPAccessibilityIdentifier.swift */,
+				4AD1537927BC009A008D6EC7 /* SPImages.swift */,
+				4AD1537727BBFD34008D6EC7 /* Assets.xcassets */,
 			);
 			path = SPPDFKit;
 			sourceTree = "<group>";
@@ -188,6 +197,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AD1537827BBFD34008D6EC7 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +217,8 @@
 			files = (
 				4AE0514027BBD8B500622959 /* UIView+Extension.swift in Sources */,
 				4AE0513527BBC86900622959 /* SPPDFViewController.swift in Sources */,
+				4AD1537A27BC009A008D6EC7 /* SPImages.swift in Sources */,
+				4AD1537627BBFBEC008D6EC7 /* SPAccessibilityIdentifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

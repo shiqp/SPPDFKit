@@ -34,7 +34,38 @@ open class SPPDFViewController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         
+        initPDFView()
+        initNavigationItems()
+    }
+    
+    private func initPDFView() {
         pdfView.autoScales = true
+        pdfView.accessibilityIdentifier = SPAccessibilityIdentifier.PDFView
         view.addSubviewToFullScreen(pdfView)
+    }
+    
+    private func initNavigationItems() {
+        let edit = UIBarButtonItem(image: SPImages.edit, style: .plain, target: self, action: #selector(editFile))
+        let print = UIBarButtonItem(image: SPImages.print, style: .plain, target: self, action: #selector(printFile))
+        let search = UIBarButtonItem(image: SPImages.search, style: .plain, target: self, action: #selector(searchFile))
+        let thumbnail = UIBarButtonItem(image: SPImages.thumbnail, style: .plain, target: self, action: #selector(showThumbnail))
+        
+        navigationItem.rightBarButtonItems = [print, edit, search, thumbnail]
+    }
+    
+    @objc func editFile() {
+        
+    }
+    
+    @objc func printFile() {
+        
+    }
+    
+    @objc func searchFile() {
+        
+    }
+    
+    @objc func showThumbnail() {
+        
     }
 }
