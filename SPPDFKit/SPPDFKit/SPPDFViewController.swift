@@ -6,11 +6,25 @@
 //
 
 import PDFKit
+import PencilKit
 
-open class SPPDFViewController: UIViewController {
+open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserver {
 
     let pdfView = PDFView()
-    
+
+    var canvasView: PKCanvasView? {
+        didSet {
+            if let canvasView = oldValue {
+                saveDrawing(in: canvasView)
+            }
+        }
+    }
+
+    private func saveDrawing(in canvasView: PKCanvasView) {
+    }
+
+    let toolPicker = PKToolPicker()
+
     open var documentURL: URL? {
         didSet {
             if let url = documentURL {
@@ -54,7 +68,29 @@ open class SPPDFViewController: UIViewController {
     }
     
     @objc func editFile() {
-        
+        if let canvasView = self.canvasView {
+            canvasView.becomeFirstResponder()
+            toolPicker.removeObserver(canvasView)
+            toolPicker.setVisible(false, forFirstResponder: canvasView)
+
+            canvasView.removeFromSuperview()
+
+            self.canvasView = nil
+            return
+        }
+
+        let canvasView = PKCanvasView()
+        view.addSubviewToFullScreen(canvasView)
+
+        canvasView.delegate = self
+        canvasView.backgroundColor = .clear
+        canvasView.drawingPolicy = .anyInput
+        canvasView.becomeFirstResponder()
+
+        toolPicker.setVisible(true, forFirstResponder: canvasView)
+        toolPicker.addObserver(canvasView)
+
+        self.canvasView = canvasView
     }
     
     @objc func printFile() {
