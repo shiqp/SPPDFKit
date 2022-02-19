@@ -23,6 +23,10 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
     private func saveDrawing(from canvasView: PKCanvasView) {
         if let page = pdfView.currentPage {
             let drawing = canvasView.drawing
+            if drawing.bounds.isEmpty {
+                return
+            }
+            
             let bounds = pdfView.convert(drawing.bounds, to: page)
             let image = canvasView.drawing.image(from: drawing.bounds, scale: 1.0)
             let annotation = SPPDFImageAnnotation(bounds: bounds, image: image)
