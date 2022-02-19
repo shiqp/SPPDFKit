@@ -15,12 +15,20 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
     var canvasView: PKCanvasView? {
         didSet {
             if let canvasView = oldValue {
-                saveDrawing(in: canvasView)
+                saveDrawing(from: canvasView)
             }
         }
     }
 
-    private func saveDrawing(in canvasView: PKCanvasView) {
+    private func saveDrawing(from canvasView: PKCanvasView) {
+        if let page = pdfView.currentPage {
+            let drawing = canvasView.drawing
+            let bounds = pdfView.convert(drawing.bounds, to: page)
+            let image = canvasView.drawing.image(from: drawing.bounds, scale: 1.0)
+            let annotation = SPPDFImageAnnotation(bounds: bounds, image: image)
+            
+            page.addAnnotation(annotation)
+        }
     }
 
     let toolPicker = PKToolPicker()
@@ -53,8 +61,11 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
     }
     
     private func initPDFView() {
+        pdfView.displayDirection = .horizontal
+        pdfView.usePageViewController(true)
         pdfView.autoScales = true
         pdfView.accessibilityIdentifier = SPAccessibilityIdentifier.PDFView
+        pdfView.backgroundColor = .systemBackground
         view.addSubviewToFullScreen(pdfView)
     }
     

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A47603027C14E3F001790C6 /* SPPDFImageAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A47602F27C14E3F001790C6 /* SPPDFImageAnnotation.swift */; };
 		4A63189D27BBC78F008AD8EA /* SPPDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A63189227BBC78F008AD8EA /* SPPDFKit.framework */; };
 		4A6318A227BBC78F008AD8EA /* SPPDFKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6318A127BBC78F008AD8EA /* SPPDFKitTests.swift */; };
 		4A6318A327BBC78F008AD8EA /* SPPDFKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4A63189527BBC78F008AD8EA /* SPPDFKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -28,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4A47602F27C14E3F001790C6 /* SPPDFImageAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPPDFImageAnnotation.swift; sourceTree = "<group>"; };
 		4A63189227BBC78F008AD8EA /* SPPDFKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SPPDFKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A63189527BBC78F008AD8EA /* SPPDFKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPPDFKit.h; sourceTree = "<group>"; };
 		4A63189C27BBC78F008AD8EA /* SPPDFKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SPPDFKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +60,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4A47602E27C14DDA001790C6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4A47602F27C14E3F001790C6 /* SPPDFImageAnnotation.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		4A47603127C155A6001790C6 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				4AD1537527BBFBEC008D6EC7 /* SPAccessibilityIdentifier.swift */,
+				4AD1537927BC009A008D6EC7 /* SPImages.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
 		4A63188827BBC78E008AD8EA = {
 			isa = PBXGroup;
 			children = (
@@ -79,11 +98,11 @@
 		4A63189427BBC78F008AD8EA /* SPPDFKit */ = {
 			isa = PBXGroup;
 			children = (
-				4AE0513E27BBD88D00622959 /* Extension */,
 				4A63189527BBC78F008AD8EA /* SPPDFKit.h */,
 				4AE0513427BBC86800622959 /* SPPDFViewController.swift */,
-				4AD1537527BBFBEC008D6EC7 /* SPAccessibilityIdentifier.swift */,
-				4AD1537927BC009A008D6EC7 /* SPImages.swift */,
+				4AE0513E27BBD88D00622959 /* Extension */,
+				4A47602E27C14DDA001790C6 /* Model */,
+				4A47603127C155A6001790C6 /* Constants */,
 				4AD1537727BBFD34008D6EC7 /* Assets.xcassets */,
 			);
 			path = SPPDFKit;
@@ -218,6 +237,7 @@
 				4AE0514027BBD8B500622959 /* UIView+Extension.swift in Sources */,
 				4AE0513527BBC86900622959 /* SPPDFViewController.swift in Sources */,
 				4AD1537A27BC009A008D6EC7 /* SPImages.swift in Sources */,
+				4A47603027C14E3F001790C6 /* SPPDFImageAnnotation.swift in Sources */,
 				4AD1537627BBFBEC008D6EC7 /* SPAccessibilityIdentifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
