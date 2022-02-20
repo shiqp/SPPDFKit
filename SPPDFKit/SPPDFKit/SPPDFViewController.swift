@@ -10,34 +10,19 @@ import PencilKit
 
 open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserver {
 
-    let pdfView = PDFView()
+    private let pdfView = PDFView()
 
-    var canvasView: PKCanvasView? {
+    private var canvasView: PKCanvasView? {
         didSet {
             if let canvasView = oldValue {
                 saveDrawing(from: canvasView)
+            } else if let canvasView = canvasView {
+                restoreDrawing(to: canvasView)
             }
         }
     }
 
-    private func saveDrawing(from canvasView: PKCanvasView) {
-        if let page = pdfView.currentPage {
-            let drawing = canvasView.drawing
-            if drawing.bounds.isEmpty || drawing.strokes.isEmpty {
-                return
-            }
-
-            let bounds = pdfView.convert(drawing.bounds, to: page)
-            let image = canvasView.drawing.image(from: drawing.bounds, scale: UIScreen.main.scale)
-            let annotation = SPPDFImageAnnotation(bounds: bounds, image: image)
-            let drawingValue = drawing.dataRepresentation().base64EncodedString()
-            annotation.setValue(drawingValue, forAnnotationKey: .drawing)
-
-            page.addAnnotation(annotation)
-        }
-    }
-
-    let toolPicker = PKToolPicker()
+    private let toolPicker = PKToolPicker()
 
     open var documentURL: URL? {
         didSet {
@@ -59,12 +44,20 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
         }
     }
 
+    // MARK: - Life Cycle
+
     open override func viewDidLoad() {
         super.viewDidLoad()
         
         initPDFView()
         initNavigationItems()
     }
+
+    open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        _ = dismissCanvasView()
+    }
+
+    // MARK: - Init Views
     
     private func initPDFView() {
         pdfView.displayDirection = .horizontal
@@ -83,27 +76,27 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
         
         navigationItem.rightBarButtonItems = [print, edit, search, thumbnail]
     }
-    
-    @objc func editFile() {
-        if let canvasView = self.canvasView {
-            canvasView.becomeFirstResponder()
-            toolPicker.removeObserver(canvasView)
-            toolPicker.setVisible(false, forFirstResponder: canvasView)
 
-            canvasView.removeFromSuperview()
+    // MARK: - Private Functions
 
-            self.canvasView = nil
-            return
+    private func saveDrawing(from canvasView: PKCanvasView) {
+        if let page = pdfView.currentPage {
+            let drawing = canvasView.drawing
+            if drawing.bounds.isEmpty || drawing.strokes.isEmpty {
+                return
+            }
+
+            let bounds = pdfView.convert(drawing.bounds, to: page)
+            let image = canvasView.drawing.image(from: drawing.bounds, scale: UIScreen.main.scale)
+            let annotation = SPPDFImageAnnotation(bounds: bounds, image: image)
+            let drawingValue = drawing.dataRepresentation().base64EncodedString()
+            annotation.setValue(drawingValue, forAnnotationKey: .drawing)
+
+            page.addAnnotation(annotation)
         }
+    }
 
-        let canvasView = PKCanvasView()
-        view.addSubviewToFullScreen(canvasView)
-
-        canvasView.delegate = self
-        canvasView.backgroundColor = .clear
-        canvasView.drawingPolicy = .anyInput
-        canvasView.becomeFirstResponder()
-
+    private func restoreDrawing(to canvasView: PKCanvasView) {
         if let page = pdfView.currentPage {
             canvasView.drawing = PKDrawing()
             for annotation in page.annotations {
@@ -127,11 +120,46 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
                 }
             }
         }
+    }
+
+    private func dismissCanvasView() -> Bool {
+        guard let canvasView = self.canvasView else {
+            return false
+        }
+
+        canvasView.becomeFirstResponder()
+        toolPicker.removeObserver(canvasView)
+        toolPicker.setVisible(false, forFirstResponder: canvasView)
+
+        canvasView.removeFromSuperview()
+
+        self.canvasView = nil
+        return true
+    }
+
+    private func presentCanvasView() {
+        let canvasView = PKCanvasView()
+
+        canvasView.delegate = self
+        canvasView.backgroundColor = .clear
+        canvasView.drawingPolicy = .anyInput
+        canvasView.becomeFirstResponder()
 
         toolPicker.setVisible(true, forFirstResponder: canvasView)
         toolPicker.addObserver(canvasView)
 
+        view.addSubviewToFullScreen(canvasView)
         self.canvasView = canvasView
+    }
+
+    // MARK: - Actions
+    
+    @objc func editFile() {
+        if dismissCanvasView() {
+            return
+        }
+
+        presentCanvasView()
     }
     
     @objc func printFile() {
