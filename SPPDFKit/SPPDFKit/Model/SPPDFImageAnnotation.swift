@@ -21,3 +21,7 @@ class SPPDFImageAnnotation: PDFAnnotation {
         }
     }
 }
+
+extension PDFAnnotationKey {
+    static let drawing = PDFAnnotationKey(rawValue: "SPPDFDrawing")
+}

@@ -23,14 +23,16 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
     private func saveDrawing(from canvasView: PKCanvasView) {
         if let page = pdfView.currentPage {
             let drawing = canvasView.drawing
-            if drawing.bounds.isEmpty {
+            if drawing.bounds.isEmpty || drawing.strokes.isEmpty {
                 return
             }
-            
+
             let bounds = pdfView.convert(drawing.bounds, to: page)
-            let image = canvasView.drawing.image(from: drawing.bounds, scale: 1.0)
+            let image = canvasView.drawing.image(from: drawing.bounds, scale: UIScreen.main.scale)
             let annotation = SPPDFImageAnnotation(bounds: bounds, image: image)
-            
+            let drawingValue = drawing.dataRepresentation().base64EncodedString()
+            annotation.setValue(drawingValue, forAnnotationKey: .drawing)
+
             page.addAnnotation(annotation)
         }
     }
@@ -101,6 +103,30 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
         canvasView.backgroundColor = .clear
         canvasView.drawingPolicy = .anyInput
         canvasView.becomeFirstResponder()
+
+        if let page = pdfView.currentPage {
+            canvasView.drawing = PKDrawing()
+            for annotation in page.annotations {
+                if let drawingValue = annotation.value(forAnnotationKey: .drawing) as? String,
+                   let drawingData = Data(base64Encoded: drawingValue),
+                   var drawing = try? PKDrawing(data: drawingData) {
+                    let source = drawing.bounds
+                    let destination = pdfView.convert(annotation.bounds, from: page)
+                    let transform =
+                    CGAffineTransform(a: destination.width / source.width,
+                                      b: 0,
+                                      c: 0,
+                                      d: destination.height / source.height,
+                                      tx: (destination.minX * source.maxX - destination.maxX * source.minX) / source.width,
+                                      ty: (destination.minY * source.maxY - destination.maxY * source.minY) / source.height)
+
+                    drawing.transform(using: transform)
+                    canvasView.drawing.append(drawing)
+
+                    page.removeAnnotation(annotation)
+                }
+            }
+        }
 
         toolPicker.setVisible(true, forFirstResponder: canvasView)
         toolPicker.addObserver(canvasView)
