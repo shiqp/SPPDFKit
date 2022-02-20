@@ -12,15 +12,7 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
 
     private let pdfView = PDFView()
 
-    private var canvasView: PKCanvasView? {
-        didSet {
-            if let canvasView = oldValue {
-                saveDrawing(from: canvasView)
-            } else if let canvasView = canvasView {
-                restoreDrawing(to: canvasView)
-            }
-        }
-    }
+    private var canvasView: SPPDFCanvasView?
 
     private let toolPicker = PKToolPicker()
 
@@ -85,49 +77,6 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
 
     // MARK: - Private Functions
 
-    private func saveDrawing(from canvasView: PKCanvasView) {
-        if let page = pdfView.currentPage {
-            let drawing = canvasView.drawing
-            if drawing.bounds.isEmpty || drawing.strokes.isEmpty {
-                return
-            }
-
-            let bounds = pdfView.convert(drawing.bounds, to: page)
-            let image = canvasView.drawing.image(from: drawing.bounds, scale: UIScreen.main.scale)
-            let annotation = SPPDFImageAnnotation(bounds: bounds, image: image)
-            let drawingValue = drawing.dataRepresentation().base64EncodedString()
-            annotation.setValue(drawingValue, forAnnotationKey: .drawing)
-
-            page.addAnnotation(annotation)
-        }
-    }
-
-    private func restoreDrawing(to canvasView: PKCanvasView) {
-        if let page = pdfView.currentPage {
-            canvasView.drawing = PKDrawing()
-            for annotation in page.annotations {
-                if let drawingValue = annotation.value(forAnnotationKey: .drawing) as? String,
-                   let drawingData = Data(base64Encoded: drawingValue),
-                   var drawing = try? PKDrawing(data: drawingData) {
-                    let source = drawing.bounds
-                    let destination = pdfView.convert(annotation.bounds, from: page)
-                    let transform =
-                    CGAffineTransform(a: destination.width / source.width,
-                                      b: 0,
-                                      c: 0,
-                                      d: destination.height / source.height,
-                                      tx: (destination.minX * source.maxX - destination.maxX * source.minX) / source.width,
-                                      ty: (destination.minY * source.maxY - destination.maxY * source.minY) / source.height)
-
-                    drawing.transform(using: transform)
-                    canvasView.drawing.append(drawing)
-
-                    page.removeAnnotation(annotation)
-                }
-            }
-        }
-    }
-
     private func dismissCanvasView() -> Bool {
         guard let canvasView = self.canvasView else {
             return false
@@ -137,6 +86,7 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
         toolPicker.removeObserver(canvasView)
         toolPicker.setVisible(false, forFirstResponder: canvasView)
 
+        canvasView.saveDrawing(to: pdfView)
         canvasView.removeFromSuperview()
 
         self.canvasView = nil
@@ -144,18 +94,23 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
     }
 
     private func presentCanvasView() {
-        let canvasView = PKCanvasView()
+        guard self.canvasView == nil else {
+            return
+        }
+
+        let canvasView = SPPDFCanvasView()
 
         canvasView.delegate = self
         canvasView.backgroundColor = .clear
         canvasView.drawingPolicy = .anyInput
         canvasView.becomeFirstResponder()
 
+        view.addSubviewToFullScreen(canvasView)
+        canvasView.restoreDrawing(from: pdfView)
+        self.canvasView = canvasView
+
         toolPicker.setVisible(true, forFirstResponder: canvasView)
         toolPicker.addObserver(canvasView)
-
-        view.addSubviewToFullScreen(canvasView)
-        self.canvasView = canvasView
     }
 
     // MARK: - Actions
