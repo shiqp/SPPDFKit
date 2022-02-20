@@ -53,6 +53,12 @@ open class SPPDFViewController: UIViewController, PKCanvasViewDelegate, PKToolPi
         initNavigationItems()
     }
 
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        self.pdfView.minScaleFactor = self.pdfView.scaleFactorForSizeToFit
+    }
+
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         _ = dismissCanvasView()
     }
